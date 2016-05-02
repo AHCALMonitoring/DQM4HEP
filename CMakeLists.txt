@@ -9,7 +9,7 @@ PROJECT( DQM4HEP )
 
 ### PACKAGE VERSIONS ########################################################
 SET( ${PROJECT_NAME}_VERSION_MAJOR 4 )
-SET( ${PROJECT_NAME}_VERSION_MINOR 2 )
+SET( ${PROJECT_NAME}_VERSION_MINOR 3 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 ###############################
@@ -40,15 +40,17 @@ IF( USE_MASTER )
 	SET( JsonCpp_version              "0.10.5" )
 	SET( DIMJC_version                "master" )
 	SET( levbdim_version              "master" )
+	SET( Mongoose_version             "master" )
 ELSE()
-	SET( xdrstream_version            "v01-00-00" )
+	SET( xdrstream_version            "v01-00-01" )
 	SET( xdrlcio_version              "v01-00-00" )
-	SET( DQMCore_version              "v02-02-00" )
-	SET( DQMViz_version               "v02-00-00" )
-	SET( DQM4ILC_version              "v01-01-00" )
+	SET( DQMCore_version              "v02-03-00" )
+	SET( DQMViz_version               "v02-01-00" )
+	SET( DQM4ILC_version              "v01-02-00" )
 	SET( JsonCpp_version              "0.10.5" )
-	SET( DIMJC_version                "v01-01-00" )
+	SET( DIMJC_version                "v01-02-00" )
 	SET( levbdim_version              "v01-00-00" )
+	SET( Mongoose_version             "master" )
 ENDIF()
 
 # ----- download settings -----
@@ -61,6 +63,7 @@ SET( JsonCpp_repository             "https://github.com/DQM4HEP/jsoncpp.git" )
 SET( DIM_repository                 "https://github.com/DQM4HEP/dim.git" )
 SET( DIMJC_repository               "https://github.com/DQM4HEP/dimjc.git" )
 SET( levbdim_repository             "https://github.com/DQM4HEP/levbdim.git" )
+SET( Mongoose_repository            "https://github.com/DQM4HEP/mongoose-cpp.git" )
 
 # the external project in used are
 # set gradually along the CMakeLists.txt
@@ -73,6 +76,7 @@ SET( DQMViz_package_depends "" )
 SET( jsoncpp_package_depends "" )
 SET( dim_package_depends "" )
 SET( dimjc_package_depends "" )
+SET( Mongoose_package_depends "" )
 
 # ----- additional cmake args -----
 IF ( NOT APPLE )
@@ -154,6 +158,9 @@ MESSAGE( STATUS "DIM_GUI: ${DIM_GUI}" )
 
 OPTION( BUILD_EVB "Whether to compile the evb sources of DQMCore" OFF )
 MESSAGE( STATUS "BUILD_EVB: ${BUILD_EVB}" )
+
+OPTION( BUILD_HTTP "Whether to compile the http supprt of DQMCore" OFF )
+MESSAGE( STATUS "BUILD_HTTP: ${BUILD_HTTP}" )
 
 # ----------------------------------------------------------------------------
 
@@ -251,17 +258,20 @@ SET( DIMJC_additional_cmake_args
 
 SET( DQMVis_additional_cmake_args
 	${DQMVis_additional_cmake_args}
-	-Dxdrstream_DIR=${CMAKE_CURRENT_SOURCE_DIR}/xdrstream
 	-DDIMDIR=${DIMDIR}
 )
 
 SET( DQM4ILC_additional_cmake_args
 	${DQM4ILC_additional_cmake_args}
-	-Dxdrstream_DIR=${CMAKE_CURRENT_SOURCE_DIR}/xdrstream
 	-Dxdrlcio_DIR=${CMAKE_CURRENT_SOURCE_DIR}/xdrlcio
 	-DDQMCore_DIR=${CMAKE_CURRENT_SOURCE_DIR}/DQMCore
 	-DBUILD_EXAMPLES=${BUILD_EXAMPLES}
 )
+
+SET( levbdim_additional_cmake_args
+    ${levbdim_additional_cmake_args}
+    -DDIMDIR=${DIMDIR}
+  )
 
 # ----- JsonCpp package -----
 FIND_PACKAGE( JSONCPP QUIET )
@@ -287,7 +297,7 @@ IF ( BUILD_EVB )
 	SET ( levbdim_DIR ${CMAKE_CURRENT_SOURCE_DIR}/levbdim )
 
 	ExternalProject_Add( levbdim
-		DEPENDS ${jsoncpp_package_depends}
+		DEPENDS ${jsoncpp_package_depends} ${dim_package_depends}
 	    GIT_REPOSITORY ${levbdim_repository}
 	    GIT_TAG ${levbdim_version}
 	    CMAKE_ARGS ${common_cmake_args} ${levbdim_additional_cmake_args}
@@ -300,9 +310,26 @@ IF ( BUILD_EVB )
 
 ENDIF()
 
+# ----- Mongoose package -----
+IF ( BUILD_HTTP )
+	SET ( Mongoose_DIR ${CMAKE_CURRENT_SOURCE_DIR}/mongoose-cpp )
+
+	ExternalProject_Add( Mongoose
+	    GIT_REPOSITORY ${Mongoose_repository}
+	    GIT_TAG ${Mongoose_version}
+	    CMAKE_ARGS ${common_cmake_args} ${Mongoose_additional_cmake_args}
+		PREFIX mongoose-cpp
+	    LIST_SEPARATOR %
+	    SOURCE_DIR ${Mongoose_DIR}
+	)
+
+	SET( Mongoose_package_depends "Mongoose" )
+
+ENDIF()
+
 # ----- DQMCore package -----
 ExternalProject_Add( DQMCore
-    DEPENDS ${dim_package_depends} ${xdrstream_package_depends} ${jsoncpp_package_depends} ${levbdim_package_depends}
+    DEPENDS ${dim_package_depends} ${xdrstream_package_depends} ${jsoncpp_package_depends} ${levbdim_package_depends} ${Mongoose_package_depends}
     GIT_REPOSITORY ${DQMCore_repository}
     GIT_TAG ${DQMCore_version}
     CMAKE_ARGS ${common_cmake_args} ${DQMCore_additional_cmake_args}

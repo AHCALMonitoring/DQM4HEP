@@ -29,7 +29,7 @@ make
 
 where OPTIONS can be :
 * BUILD_DQMVIZ [ON/OFF] to install visualization package
-* BUILD_DQM4ILC [ON/OFF] to install ilcsoft related support (lcio streamer, marlin interface , etc ...)
+* BUILD_DQM4AHCAL [ON/OFF] to install ilcsoft related support (lcio streamer, marlin interface , etc ...)
 * BUILD_EXAMPLES [ON/OFF] to build example implementations
 * INSTALL_DOC [ON/OFF] to install [doxygen](www.doxygen.org) code documentation
 * DIM_GUI [ON/OFF] to build dim gui support (may not work on all operating systems)

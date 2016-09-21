@@ -153,6 +153,9 @@ MESSAGE( STATUS "BUILD_DQM4AHCAL: ${BUILD_DQM4AHCAL}" )
 OPTION( BUILD_EXAMPLES "Build DQMCore (resp DQM4AHCAL) with examples" OFF )
 MESSAGE( STATUS "BUILD_EXAMPLES: ${BUILD_EXAMPLES}" )
 
+OPTION( BUILD_AHCAL "Build DQMCore (resp DQM4AHCAL) with analysis modules" OFF )
+MESSAGE( STATUS "BUILD_AHCAL: ${BUILD_AHCAL}" )
+
 OPTION( DIM_GUI "Whether to build dim gui part (did, webDid)" OFF )
 MESSAGE( STATUS "DIM_GUI: ${DIM_GUI}" )
 
@@ -265,6 +268,7 @@ SET( DQM4AHCAL_additional_cmake_args
 	${DQM4AHCAL_additional_cmake_args}
 	-Dxdrlcio_DIR=${CMAKE_CURRENT_SOURCE_DIR}/xdrlcio
 	-DDQMCore_DIR=${CMAKE_CURRENT_SOURCE_DIR}/DQMCore
+	-DBUILD_AHCAL=${BUILD_AHCAL}
 )
 
 SET( levbdim_additional_cmake_args

@@ -36,7 +36,7 @@ IF( USE_MASTER )
 	SET( xdrlcio_version              "master" )
 	SET( DQMCore_version              "master" )
 	SET( DQMViz_version               "master" )
-	SET( DQM4AHCAL_version            "master" )
+	SET( DQM4ILC_version            "master" )
 	SET( JsonCpp_version              "0.10.5" )
 	SET( DIMJC_version                "master" )
 	SET( levbdim_version              "master" )
@@ -46,7 +46,7 @@ ELSE()
 	SET( xdrlcio_version              "v01-00-00" )
 	SET( DQMCore_version              "v02-03-00" )
 	SET( DQMViz_version               "v02-01-00" )
-	SET( DQM4AHCAL_version            "master" )
+	SET( DQM4ILC_version            "master" )
 	SET( JsonCpp_version              "0.10.5" )
 	SET( DIMJC_version                "v01-02-00" )
 	SET( levbdim_version              "v01-00-00" )
@@ -58,7 +58,7 @@ SET( xdrstream_repository           "https://github.com/AHCALMonitoring/xdrstrea
 SET( xdrlcio_repository             "https://github.com/AHCALMonitoring/xdrlcio.git" )
 SET( DQMCore_repository             "https://github.com/AHCALMonitoring/DQMCore.git" )
 SET( DQMViz_repository              "https://github.com/AHCALMonitoring/DQMViz.git" )
-SET( DQM4AHCAL_repository           "https://github.com/AHCALMonitoring/DQM4AHCAL.git" )
+SET( DQM4ILC_repository           "https://github.com/AHCALMonitoring/DQM4ILC.git" )
 SET( JsonCpp_repository             "https://github.com/AHCALMonitoring/jsoncpp.git" )
 SET( DIM_repository                 "https://github.com/AHCALMonitoring/dim.git" )
 SET( DIMJC_repository               "https://github.com/AHCALMonitoring/dimjc.git" )
@@ -147,13 +147,13 @@ MESSAGE( STATUS "BUILD_DQMVIZ: ${BUILD_DQMVIZ}" )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 MESSAGE( STATUS "INSTALL_DOC: ${INSTALL_DOC}" )
 
-OPTION( BUILD_DQM4AHCAL "Build DQM4AHCAL package (requires ilcsoft installed)" OFF )
-MESSAGE( STATUS "BUILD_DQM4AHCAL: ${BUILD_DQM4AHCAL}" )
+OPTION( BUILD_DQM4ILC "Build DQM4ILC package (requires ilcsoft installed)" OFF )
+MESSAGE( STATUS "BUILD_DQM4ILC: ${BUILD_DQM4ILC}" )
 
-OPTION( BUILD_EXAMPLES "Build DQMCore (resp DQM4AHCAL) with examples" OFF )
+OPTION( BUILD_EXAMPLES "Build DQMCore (resp DQM4ILC) with examples" OFF )
 MESSAGE( STATUS "BUILD_EXAMPLES: ${BUILD_EXAMPLES}" )
 
-OPTION( BUILD_AHCAL "Build DQMCore (resp DQM4AHCAL) with analysis modules" OFF )
+OPTION( BUILD_AHCAL "Build DQMCore (resp DQM4ILC) with analysis modules" OFF )
 MESSAGE( STATUS "BUILD_AHCAL: ${BUILD_AHCAL}" )
 
 OPTION( DIM_GUI "Whether to build dim gui part (did, webDid)" OFF )
@@ -264,11 +264,12 @@ SET( DQMVis_additional_cmake_args
 	-DDIMDIR=${DIMDIR}
 )
 
-SET( DQM4AHCAL_additional_cmake_args
-	${DQM4AHCAL_additional_cmake_args}
+SET( DQM4ILC_additional_cmake_args
+	${DQM4ILC_additional_cmake_args}
 	-Dxdrlcio_DIR=${CMAKE_CURRENT_SOURCE_DIR}/xdrlcio
 	-DDQMCore_DIR=${CMAKE_CURRENT_SOURCE_DIR}/DQMCore
 	-DBUILD_AHCAL=${BUILD_AHCAL}
+	-DBUILD_EXAMPLES=${BUILD_EXAMPLES}
 )
 
 SET( levbdim_additional_cmake_args
@@ -368,7 +369,7 @@ SET( DQMVis_additional_cmake_args
 
 
 
-IF( BUILD_DQM4AHCAL )
+IF( BUILD_DQM4ILC )
 
 	# ----- xdrlcio package -----
     ExternalProject_Add( xdrlcio
@@ -383,18 +384,18 @@ IF( BUILD_DQM4AHCAL )
 
     SET( xdrlcio_package_depends "xdrlcio" )
 
-	# ----- DQM4AHCAL package -----
-    ExternalProject_Add( DQM4AHCAL
+	# ----- DQM4ILC package -----
+    ExternalProject_Add( DQM4ILC
         DEPENDS
         	${xdrstream_package_depends}
         	${xdrlcio_package_depends}
         	${DQMCore_package_depends}
-        GIT_REPOSITORY ${DQM4AHCAL_repository}
-        GIT_TAG ${DQM4AHCAL_version}
-        CMAKE_ARGS ${common_cmake_args} ${DQM4AHCAL_additional_cmake_args}
-	    PREFIX DQM4AHCAL
+        GIT_REPOSITORY ${DQM4ILC_repository}
+        GIT_TAG ${DQM4ILC_version}
+        CMAKE_ARGS ${common_cmake_args} ${DQM4ILC_additional_cmake_args}
+	    PREFIX DQM4ILC
 	    LIST_SEPARATOR %
-	    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/DQM4AHCAL
+	    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/DQM4ILC
     )
 
 ENDIF()

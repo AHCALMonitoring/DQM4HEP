@@ -2,6 +2,8 @@
 # A Data Quality Monitoring for High Energy Physics
 Copyright IPNL/CNRS/IN2P3
 
+Modified for the AHCAL. See http://flcwiki.desy.de/AHCALMonitoring_DQM4HEP for installation and running instructions.
+
 ## INSTALL:
 
 Can be built standalonly or using [ilcsoft](http://ilcsoft.desy.de/portal).
